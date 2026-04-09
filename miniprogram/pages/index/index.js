@@ -18,7 +18,8 @@ Page({
   // 检查登录状态
   checkLoginStatus() {
     const app = getApp();
-    const userInfo = app.globalData.userInfo;
+    // 优先从 globalData 获取，否则从本地存储获取
+    const userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo');
 
     // 如果用户信息不完整，显示登录弹窗
     if (!userInfo || !userInfo.nickname) {
