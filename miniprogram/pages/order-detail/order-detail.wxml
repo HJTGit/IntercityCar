@@ -19,8 +19,9 @@
       class="order-map"
       latitude="{{mapCenter.latitude}}"
       longitude="{{mapCenter.longitude}}"
-      scale="14"
+      scale="{{mapScale}}"
       markers="{{markers}}"
+      include-points="{{markers}}"
       show-location
       bindmarkertap="onMarkerTap"
     ></map>

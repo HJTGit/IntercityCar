@@ -12,6 +12,7 @@ Page({
       latitude: 39.908823,
       longitude: 116.397470
     },
+    mapScale: 14,
     markers: []
   },
 
@@ -105,6 +106,8 @@ Page({
 
     // 设置地图中心点
     let mapCenter = this.data.mapCenter;
+    let mapScale = 14;
+
     if (markers.length > 0) {
       if (markers.length === 2) {
         // 两个点都在，取中点
@@ -112,15 +115,40 @@ Page({
           latitude: (markers[0].latitude + markers[1].latitude) / 2,
           longitude: (markers[0].longitude + markers[1].longitude) / 2
         };
+
+        // 计算两个点之间的距离，调整缩放级别
+        const latDiff = Math.abs(markers[0].latitude - markers[1].latitude);
+        const lngDiff = Math.abs(markers[0].longitude - markers[1].longitude);
+        const maxDiff = Math.max(latDiff, lngDiff);
+
+        // 根据距离调整缩放级别
+        if (maxDiff > 10) {
+          mapScale = 3;
+        } else if (maxDiff > 5) {
+          mapScale = 4;
+        } else if (maxDiff > 2) {
+          mapScale = 6;
+        } else if (maxDiff > 1) {
+          mapScale = 8;
+        } else if (maxDiff > 0.5) {
+          mapScale = 10;
+        } else if (maxDiff > 0.2) {
+          mapScale = 12;
+        } else if (maxDiff > 0.1) {
+          mapScale = 13;
+        } else {
+          mapScale = 14;
+        }
       } else {
         mapCenter = {
           latitude: markers[0].latitude,
           longitude: markers[0].longitude
         };
+        mapScale = 16;
       }
     }
 
-    this.setData({ markers, mapCenter });
+    this.setData({ markers, mapCenter, mapScale });
   },
 
   // 点击地图标记
