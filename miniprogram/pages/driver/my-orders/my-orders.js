@@ -102,33 +102,11 @@ Page({
     });
   },
 
-  // 完成行程
-  async onCompleteOrder(e) {
+  // 完成行程 - 直接跳转详情页
+  onCompleteOrder(e) {
     const orderId = e.currentTarget.dataset.id;
-
-    wx.showModal({
-      title: '确认完成',
-      content: '确定已完成行程吗？',
-      success: async (res) => {
-        if (res.confirm) {
-          try {
-            utils.showLoading('处理中...');
-            const result = await api.completeOrder(orderId);
-            utils.hideLoading();
-
-            if (result.code === 1000) {
-              utils.showSuccess('订单已完成');
-              this.loadOrders();
-            } else {
-              utils.showError(result.message || '操作失败');
-            }
-          } catch (err) {
-            utils.hideLoading();
-            utils.showError('网络请求失败');
-            console.error('完成订单失败:', err);
-          }
-        }
-      }
+    wx.navigateTo({
+      url: `/pages/order-detail/order-detail?id=${orderId}&role=driver`
     });
   }
 });
