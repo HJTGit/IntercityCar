@@ -26,17 +26,24 @@ App({
     this.syncUserInfo();
   },
 
-  // 同步用户信息到服务器
+  // 同步用户信息到服务器（仅同步已有数据，不主动注册）
   async syncUserInfo() {
     try {
+      // 从本地存储获取已有用户信息
+      const localUserInfo = wx.getStorageSync('userInfo');
+      if (!localUserInfo || !localUserInfo.nickname) {
+        // 没有用户信息，等待登录弹窗
+        return;
+      }
+
       const res = await api.registerUser({
-        nickname: '用户',
-        name: '',
-        phone: ''
+        nickname: localUserInfo.nickname || '用户',
+        avatar: localUserInfo.avatar || '',
+        phone: localUserInfo.phone || '',
+        name: localUserInfo.name || ''
       });
 
       if (res.code === 1000 && res.data) {
-        // 同步服务器返回的角色
         const serverRole = res.data.role || 'passenger';
         this.globalData.role = serverRole;
         wx.setStorageSync('role', serverRole);
@@ -44,7 +51,6 @@ App({
       }
     } catch (err) {
       console.log('同步用户信息失败', err);
-      // 失败时使用本地默认角色
       const localRole = wx.getStorageSync('role') || 'passenger';
       this.globalData.role = localRole;
     }
