@@ -67,12 +67,14 @@ page {
   border-radius: var(--radius-md);
   font-size: 16px;
   font-weight: 500;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 button.btn {
   border: none;
-  padding: 0;
-  line-height: 1;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
 button.btn::after {
