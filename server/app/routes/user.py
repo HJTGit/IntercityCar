@@ -36,9 +36,8 @@ def register_user():
     # 获取或创建用户
     user = UserService.get_or_create_user(openid, nickname, avatar)
 
-    # 更新其他信息
-    if phone or name:
-        user = UserService.update_user(openid, phone=phone, name=name, nickname=nickname, avatar=avatar)
+    # 更新所有信息（确保部分数据也能保存）
+    user = UserService.update_user(openid, phone=phone, name=name, nickname=nickname, avatar=avatar)
 
     return success(data=user.to_dict())
 
