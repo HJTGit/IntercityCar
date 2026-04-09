@@ -72,7 +72,6 @@ page {
 button.btn {
   border: none;
   padding: 0;
-  background: transparent;
   line-height: inherit;
 }
 
