@@ -67,16 +67,13 @@ page {
   border-radius: var(--radius-md);
   font-size: 16px;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
 }
 
 button.btn {
   border: none;
+  padding: 0;
   background: transparent;
+  line-height: inherit;
 }
 
 button.btn::after {
