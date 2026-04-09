@@ -37,6 +37,8 @@
       wx:for="{{orders}}"
       wx:key="id"
       class="order-card card"
+      bindtap="onOrderTap"
+      data-id="{{item.id}}"
     >
       <view class="order-route">
         <text class="route-icon">📍</text>

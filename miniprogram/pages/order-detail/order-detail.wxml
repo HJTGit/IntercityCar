@@ -15,11 +15,24 @@
 
   <!-- 地图区域 -->
   <view class="map-section card">
-    <view class="map-placeholder">
-      <view class="map-icon">🗺️</view>
-      <view class="map-text">地图区域</view>
-      <view class="map-hint">● 起点：{{order.startLocation.name}}</view>
-      <view class="map-hint">◎ 终点：{{order.endLocation.name}}</view>
+    <map
+      class="order-map"
+      latitude="{{mapCenter.latitude}}"
+      longitude="{{mapCenter.longitude}}"
+      scale="14"
+      markers="{{markers}}"
+      show-location
+      bindmarkertap="onMarkerTap"
+    ></map>
+    <view class="map-legend">
+      <view class="legend-item">
+        <view class="legend-dot start"></view>
+        <view class="legend-text">{{order.startLocation.name}}</view>
+      </view>
+      <view class="legend-item">
+        <view class="legend-dot end"></view>
+        <view class="legend-text">{{order.endLocation.name}}</view>
+      </view>
     </view>
   </view>
 

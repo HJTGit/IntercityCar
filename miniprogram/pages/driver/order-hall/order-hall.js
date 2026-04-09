@@ -146,5 +146,13 @@ Page({
         }
       }
     });
+  },
+
+  // 点击订单卡片进入详情
+  onOrderTap(e) {
+    const orderId = e.currentTarget.dataset.id;
+    wx.navigateTo({
+      url: `/pages/order-detail/order-detail?id=${orderId}&role=driver`
+    });
   }
 });

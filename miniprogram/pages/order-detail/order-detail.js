@@ -7,7 +7,12 @@ Page({
   data: {
     orderId: null,
     role: 'passenger',
-    order: {}
+    order: {},
+    mapCenter: {
+      latitude: 39.908823,
+      longitude: 116.397470
+    },
+    markers: []
   },
 
   onLoad(options) {
@@ -43,6 +48,7 @@ Page({
             driverPhoneDisplay: order.driverPhone ? utils.maskPhone(order.driverPhone) : ''
           }
         });
+        this.updateMapData(order);
       } else {
         utils.showError(res.message || '加载失败');
       }
@@ -51,6 +57,95 @@ Page({
       utils.showError('网络请求失败');
       console.error('加载订单详情失败:', err);
     }
+  },
+
+  // 更新地图数据
+  updateMapData(order) {
+    const markers = [];
+
+    // 添加起点标记
+    if (order.startLocation && order.startLocation.latitude && order.startLocation.longitude) {
+      markers.push({
+        id: 1,
+        latitude: order.startLocation.latitude,
+        longitude: order.startLocation.longitude,
+        width: 30,
+        height: 30,
+        callout: {
+          content: '起点: ' + order.startLocation.name,
+          color: '#333333',
+          fontSize: 12,
+          borderRadius: 8,
+          padding: 8,
+          display: 'ALWAYS',
+          bgColor: '#FFFFFF'
+        }
+      });
+    }
+
+    // 添加终点标记
+    if (order.endLocation && order.endLocation.latitude && order.endLocation.longitude) {
+      markers.push({
+        id: 2,
+        latitude: order.endLocation.latitude,
+        longitude: order.endLocation.longitude,
+        width: 30,
+        height: 30,
+        callout: {
+          content: '终点: ' + order.endLocation.name,
+          color: '#333333',
+          fontSize: 12,
+          borderRadius: 8,
+          padding: 8,
+          display: 'ALWAYS',
+          bgColor: '#FFFFFF'
+        }
+      });
+    }
+
+    // 设置地图中心点
+    let mapCenter = this.data.mapCenter;
+    if (markers.length > 0) {
+      if (markers.length === 2) {
+        // 两个点都在，取中点
+        mapCenter = {
+          latitude: (markers[0].latitude + markers[1].latitude) / 2,
+          longitude: (markers[0].longitude + markers[1].longitude) / 2
+        };
+      } else {
+        mapCenter = {
+          latitude: markers[0].latitude,
+          longitude: markers[0].longitude
+        };
+      }
+    }
+
+    this.setData({ markers, mapCenter });
+  },
+
+  // 点击地图标记
+  onMarkerTap(e) {
+    const markerId = e.detail.markerId;
+    const order = this.data.order;
+
+    if (markerId === 1 && order.startLocation) {
+      this.openLocation(order.startLocation);
+    } else if (markerId === 2 && order.endLocation) {
+      this.openLocation(order.endLocation);
+    }
+  },
+
+  // 在地图中打开位置
+  openLocation(location) {
+    if (!location || !location.latitude || !location.longitude) return;
+
+    wx.openLocation({
+      latitude: location.latitude,
+      longitude: location.longitude,
+      name: location.name || '',
+      address: location.address || location.name || '',
+      scale: 18
+    });
   },
 
   // 拨打电话
