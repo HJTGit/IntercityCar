@@ -32,9 +32,9 @@ Component({
 
   methods: {
     updateSelected() {
-      const app = getApp();
-      const currentRole = app.globalData.role;
       const pages = getCurrentPages();
+      if (!pages || pages.length === 0) return;
+
       const currentPage = pages[pages.length - 1];
       const route = '/' + currentPage.route;
 
