@@ -5,6 +5,24 @@ CREATE DATABASE IF NOT EXISTS `intercity_car` DEFAULT CHARACTER SET utf8mb4 COLL
 
 USE `intercity_car`;
 
+-- 创建用户表
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户ID',
+  `openid` VARCHAR(64) NOT NULL COMMENT '微信OpenID',
+  `nickname` VARCHAR(64) DEFAULT '' COMMENT '昵称',
+  `avatar` VARCHAR(255) DEFAULT '' COMMENT '头像URL',
+  `phone` VARCHAR(20) DEFAULT '' COMMENT '手机号',
+  `name` VARCHAR(64) DEFAULT '' COMMENT '姓名',
+  `role` VARCHAR(20) NOT NULL DEFAULT 'passenger' COMMENT '角色 passenger/driver',
+  `status` SMALLINT NOT NULL DEFAULT 1 COMMENT '状态 1=正常',
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_openid` (`openid`),
+  KEY `idx_role` (`role`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户表';
+
 -- 创建订单表
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '订单ID',
