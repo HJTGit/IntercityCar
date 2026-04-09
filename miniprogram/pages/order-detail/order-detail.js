@@ -207,8 +207,16 @@ Page({
       success: async (res) => {
         if (res.confirm) {
           try {
+            // 获取当前司机信息
+            const app = getApp();
+            const userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo') || {};
+
             utils.showLoading('接单中...');
-            const result = await api.acceptOrder(this.data.orderId);
+            const result = await api.acceptOrder(this.data.orderId, {
+              driverName: userInfo.nickname || userInfo.name || '司机',
+              driverPhone: userInfo.phone || '',
+              driverAvatar: userInfo.avatar || ''
+            });
             utils.hideLoading();
 
             if (result.code === 1000) {

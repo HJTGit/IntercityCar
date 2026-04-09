@@ -105,9 +105,10 @@ function getOrderDetail(orderId) {
 /**
  * 司机接单
  * @param {number} orderId - 订单ID
+ * @param {object} driverData - 司机信息
  */
-function acceptOrder(orderId) {
-  return request(`/order/${orderId}/accept`, 'POST', {});
+function acceptOrder(orderId, driverData = {}) {
+  return request(`/order/${orderId}/accept`, 'POST', driverData);
 }
 
 /**
