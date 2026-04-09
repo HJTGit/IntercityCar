@@ -9,13 +9,18 @@
 
     <!-- 用户信息卡片 -->
     <view class="card user-card">
-      <view class="user-info">
-        <view class="user-avatar">👤</view>
-        <view class="user-detail">
-          <view class="user-name">{{userInfo.name || '乘客'}}</view>
-          <view class="user-role">乘客身份</view>
+      <view class="user-info" bindtap="onEditUserInfo">
+        <view class="user-avatar">
+          <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill"></image>
+          <text wx:else>👤</text>
         </view>
+        <view class="user-detail">
+          <view class="user-name">{{userInfo.nickname || '未设置昵称'}}</view>
+          <view class="user-phone">{{userInfo.phone || '未绑定手机'}}</view>
+        </view>
+        <view class="user-edit">编辑</view>
       </view>
+      <view class="user-role-tag">{{userInfo.role === 'driver' ? '司机' : '乘客'}}身份</view>
     </view>
 
     <!-- 切换到司机 -->
@@ -34,6 +39,22 @@
     <!-- 页面标题 -->
     <view class="page-header">
       <view class="page-title">我的接单</view>
+    </view>
+
+    <!-- 用户信息卡片 -->
+    <view class="card user-card">
+      <view class="user-info" bindtap="onEditUserInfo">
+        <view class="user-avatar">
+          <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill"></image>
+          <text wx:else>👤</text>
+        </view>
+        <view class="user-detail">
+          <view class="user-name">{{userInfo.nickname || '未设置昵称'}}</view>
+          <view class="user-phone">{{userInfo.phone || '未绑定手机'}}</view>
+        </view>
+        <view class="user-edit">编辑</view>
+      </view>
+      <view class="user-role-tag driver">司机身份</view>
     </view>
 
     <!-- 切换回乘客 -->
@@ -115,4 +136,54 @@
 
   <!-- TabBar 占位 -->
   <view class="tab-bar-placeholder"></view>
+</view>
+
+<!-- 编辑用户信息弹窗 -->
+<view class="edit-modal" wx:if="{{showEditModal}}">
+  <view class="edit-mask" bindtap="onCloseEditModal"></view>
+  <view class="edit-content">
+    <view class="edit-header">
+      <view class="edit-title">编辑个人信息</view>
+      <view class="edit-close" bindtap="onCloseEditModal">×</view>
+    </view>
+
+    <!-- 头像选择 -->
+    <view class="edit-item">
+      <view class="edit-label">头像</view>
+      <button class="edit-avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <view class="edit-avatar">
+          <image wx:if="{{editData.avatar}}" src="{{editData.avatar}}" mode="aspectFill"></image>
+          <text wx:else>👤</text>
+        </view>
+      </button>
+    </view>
+
+    <!-- 昵称 -->
+    <view class="edit-item">
+      <view class="edit-label">昵称</view>
+      <input
+        type="nickname"
+        class="edit-input"
+        placeholder="请输入昵称"
+        bindblur="onNicknameBlur"
+        value="{{editData.nickname}}"
+      />
+    </view>
+
+    <!-- 手机号 -->
+    <view class="edit-item">
+      <view class="edit-label">手机号</view>
+      <input
+        type="number"
+        class="edit-input"
+        placeholder="请输入手机号"
+        maxlength="11"
+        bindinput="onPhoneInput"
+        value="{{editData.phone}}"
+      />
+    </view>
+
+    <!-- 保存按钮 -->
+    <button class="btn btn-primary edit-btn" bindtap="onSaveUserInfo">保存</button>
+  </view>
 </view>

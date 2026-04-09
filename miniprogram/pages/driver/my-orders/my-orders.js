@@ -6,9 +6,12 @@ const constants = require('../../../utils/constants.js');
 Page({
   data: {
     currentRole: 'passenger',
-    userInfo: {
-      name: '乘客',
-      phone: '138****8000'
+    userInfo: {},
+    showEditModal: false,
+    editData: {
+      avatar: '',
+      nickname: '',
+      phone: ''
     },
     // 状态筛选
     statusFilters: constants.driverStatusFilters,
@@ -22,12 +25,14 @@ Page({
     const app = getApp();
     const role = app.globalData.role || wx.getStorageSync('role') || 'passenger';
     this.setData({ currentRole: role });
+    this.loadUserInfo();
   },
 
   onShow() {
     const app = getApp();
     const role = app.globalData.role || wx.getStorageSync('role') || 'passenger';
     this.setData({ currentRole: role });
+    this.loadUserInfo();
 
     if (role === 'driver') {
       this.loadOrders();
@@ -42,6 +47,13 @@ Page({
     }
   },
 
+  // 加载用户信息
+  loadUserInfo() {
+    const app = getApp();
+    const userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo') || {};
+    this.setData({ userInfo });
+  },
+
   // 切换到司机模式
   onSwitchToDriver() {
     const app = getApp();
@@ -54,6 +66,89 @@ Page({
     const app = getApp();
     app.setRole('passenger');
     this.setData({ currentRole: 'passenger' });
+  },
+
+  // 编辑用户信息
+  onEditUserInfo() {
+    const { userInfo } = this.data;
+    this.setData({
+      showEditModal: true,
+      editData: {
+        avatar: userInfo.avatar || '',
+        nickname: userInfo.nickname || '',
+        phone: userInfo.phone || ''
+      }
+    });
+  },
+
+  // 关闭编辑弹窗
+  onCloseEditModal() {
+    this.setData({ showEditModal: false });
+  },
+
+  // 选择头像
+  onChooseAvatar(e) {
+    const { avatarUrl } = e.detail;
+    this.setData({
+      'editData.avatar': avatarUrl
+    });
+  },
+
+  // 昵称输入
+  onNicknameBlur(e) {
+    const { value } = e.detail;
+    this.setData({
+      'editData.nickname': value
+    });
+  },
+
+  // 手机号输入
+  onPhoneInput(e) {
+    const { value } = e.detail;
+    this.setData({
+      'editData.phone': value
+    });
+  },
+
+  // 保存用户信息
+  async onSaveUserInfo() {
+    const { avatar, nickname, phone } = this.data.editData;
+
+    if (!nickname) {
+      wx.showToast({ title: '请输入昵称', icon: 'none' });
+      return;
+    }
+
+    try {
+      wx.showLoading({ title: '保存中...' });
+      const res = await api.registerUser({
+        nickname: nickname,
+        avatar: avatar,
+        phone: phone,
+        name: ''
+      });
+      wx.hideLoading();
+
+      if (res.code === 1000) {
+        const app = getApp();
+        app.globalData.userInfo = res.data;
+        app.globalData.role = res.data.role || 'passenger';
+        wx.setStorageSync('userInfo', res.data);
+        wx.setStorageSync('role', res.data.role || 'passenger');
+
+        this.setData({
+          showEditModal: false,
+          userInfo: res.data
+        });
+        wx.showToast({ title: '保存成功', icon: 'success' });
+      } else {
+        wx.showToast({ title: res.message || '保存失败', icon: 'none' });
+      }
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '网络请求失败', icon: 'none' });
+      console.error('保存失败:', err);
+    }
   },
 
   // 切换状态筛选

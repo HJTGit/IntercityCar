@@ -25,6 +25,7 @@
 .user-info {
   display: flex;
   align-items: center;
+  margin-bottom: 12px;
 }
 
 .user-avatar {
@@ -37,6 +38,13 @@
   justify-content: center;
   font-size: 28px;
   margin-right: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.user-avatar image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 
 .user-detail {
@@ -50,9 +58,28 @@
   margin-bottom: 4px;
 }
 
-.user-role {
+.user-phone {
   font-size: 14px;
   color: var(--text-secondary);
+}
+
+.user-role-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--tag-pending-bg);
+  color: var(--warning);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.user-role-tag.driver {
+  background: var(--tag-accepted-bg);
+  color: var(--primary);
+}
+
+.user-edit {
+  font-size: 14px;
+  color: var(--primary);
 }
 
 /* 切换卡片 */
@@ -236,4 +263,111 @@
 /* TabBar 占位 */
 .tab-bar-placeholder {
   height: 56px;
+}
+
+/* 编辑用户信息弹窗 */
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.edit-content {
+  position: relative;
+  width: 320px;
+  background: var(--background-white);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin: 0 auto;
+}
+
+.edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.edit-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.edit-close {
+  font-size: 24px;
+  color: var(--text-placeholder);
+  padding: 4px;
+}
+
+.edit-item {
+  margin-bottom: 20px;
+}
+
+.edit-label {
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.edit-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.edit-avatar-btn {
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+}
+
+.edit-avatar-btn::after {
+  border: none;
+}
+
+.edit-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  overflow: hidden;
+}
+
+.edit-avatar image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.edit-btn {
+  width: 100%;
+  margin-top: 12px;
 }
