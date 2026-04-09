@@ -131,6 +131,7 @@
   flex: 1;
   display: flex;
   align-items: center;
+  justify-content: center;
   padding: 12px 8px;
 }
 
@@ -143,11 +144,20 @@
   flex: 1;
   font-size: 15px;
   color: var(--text-primary);
+  text-align: center;
 }
 
 .datetime-arrow {
   font-size: 16px;
   color: var(--text-placeholder);
+}
+
+.time-item {
+  justify-content: center;
+}
+
+.time-item .datetime-icon {
+  margin-right: 6px;
 }
 
 .datetime-divider {
