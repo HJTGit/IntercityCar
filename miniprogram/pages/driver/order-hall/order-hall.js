@@ -113,38 +113,11 @@ Page({
     }
   },
 
-  // 接单
-  async onAcceptOrder(e) {
+  // 接单 - 跳转到详情页
+  onAcceptOrder(e) {
     const orderId = e.currentTarget.dataset.id;
-
-    wx.showModal({
-      title: '确认接单',
-      content: '确定要接下这个订单吗？',
-      success: async (res) => {
-        if (res.confirm) {
-          try {
-            utils.showLoading('接单中...');
-            const result = await api.acceptOrder(orderId);
-            utils.hideLoading();
-
-            if (result.code === 1000) {
-              utils.showSuccess('接单成功');
-              // 跳转到我的接单页面
-              setTimeout(() => {
-                wx.switchTab({
-                  url: '/pages/driver/my-orders/my-orders'
-                });
-              }, 1500);
-            } else {
-              utils.showError(result.message || '接单失败');
-            }
-          } catch (err) {
-            utils.hideLoading();
-            utils.showError('网络请求失败');
-            console.error('接单失败:', err);
-          }
-        }
-      }
+    wx.navigateTo({
+      url: `/pages/order-detail/order-detail?id=${orderId}&role=driver`
     });
   },
 

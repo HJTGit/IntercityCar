@@ -124,6 +124,15 @@
       取消订单
     </button>
 
+    <!-- 待接单：司机可以接单 -->
+    <button
+      wx:if="{{order.status === 'pending' && role === 'driver'}}"
+      class="btn btn-primary"
+      bindtap="onAcceptOrder"
+    >
+      立即接单
+    </button>
+
     <!-- 已接单：乘客可以联系司机 -->
     <button
       wx:if="{{order.status === 'accepted' && role === 'passenger'}}"

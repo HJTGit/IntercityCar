@@ -199,6 +199,34 @@ Page({
     }
   },
 
+  // 司机接单
+  onAcceptOrder() {
+    wx.showModal({
+      title: '确认接单',
+      content: '确定要接下这个订单吗？',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            utils.showLoading('接单中...');
+            const result = await api.acceptOrder(this.data.orderId);
+            utils.hideLoading();
+
+            if (result.code === 1000) {
+              utils.showSuccess('接单成功');
+              this.loadOrderDetail();
+            } else {
+              utils.showError(result.message || '接单失败');
+            }
+          } catch (err) {
+            utils.hideLoading();
+            utils.showError('网络请求失败');
+            console.error('接单失败:', err);
+          }
+        }
+      }
+    });
+  },
+
   // 取消订单
   onCancelOrder() {
     wx.showModal({
