@@ -6,9 +6,7 @@ Page({
   },
 
   onLoad() {
-    // 默认设置为乘客模式
-    const app = getApp();
-    app.setRole('passenger');
+    // 不再强制设置为乘客，保持全局角色状态
   },
 
   // 跳转到下单页

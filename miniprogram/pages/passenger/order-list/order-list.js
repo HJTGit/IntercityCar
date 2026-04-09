@@ -13,20 +13,7 @@ Page({
     loading: false
   },
 
-  onLoad() {
-    // 确保是乘客模式
-    const app = getApp();
-    if (app.globalData.role !== 'passenger') {
-      app.setRole('passenger');
-    }
-  },
-
   onShow() {
-    // 检查角色
-    const app = getApp();
-    if (app.globalData.role !== 'passenger') {
-      app.setRole('passenger');
-    }
     this.loadOrders();
   },
 

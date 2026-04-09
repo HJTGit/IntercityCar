@@ -29,10 +29,6 @@ Page({
   },
 
   onLoad() {
-    // 默认设置为乘客
-    const app = getApp();
-    app.setRole('passenger');
-
     // 设置用户信息
     this.setData({
       passengerName: '乘客',
