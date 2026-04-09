@@ -1,0 +1,81 @@
+<!--pages/passenger/order-list/order-list.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="page-title">我的订单</view>
+  </view>
+
+  <!-- 状态筛选 -->
+  <view class="status-tabs">
+    <view
+      wx:for="{{statusFilters}}"
+      wx:key="value"
+      class="status-tab {{currentStatus === item.value ? 'active' : ''}}"
+      bindtap="onStatusChange"
+      data-status="{{item.value}}"
+    >
+      {{item.text}}
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list">
+    <view
+      wx:for="{{orders}}"
+      wx:key="id"
+      class="order-card card"
+      bindtap="onOrderTap"
+      data-id="{{item.id}}"
+    >
+      <view class="order-route">
+        <text class="route-icon">📍</text>
+        <text class="route-text">{{item.startLocation.name}} → {{item.endLocation.name}}</text>
+      </view>
+
+      <view class="order-info">
+        <view class="info-item">
+          <text class="info-icon">🕐</text>
+          <text class="info-text">{{item.appointmentTimeDisplay}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-icon">👤</text>
+          <text class="info-text">{{item.passengerCount}}人</text>
+        </view>
+      </view>
+
+      <view class="order-remark" wx:if="{{item.remark}}">
+        <text class="remark-icon">📝</text>
+        <text class="remark-text">{{item.remark}}</text>
+      </view>
+
+      <view class="order-footer">
+        <view class="status-tag {{item.statusClass}}">{{item.statusText}}</view>
+        <view class="order-meta">
+          <text class="meta-text">ID: {{item.id}}</text>
+          <text class="arrow-icon">→</text>
+        </view>
+      </view>
+
+      <!-- 司机信息（已接单时显示） -->
+      <view class="driver-info" wx:if="{{item.driverName}}">
+        <text class="driver-icon">🚗</text>
+        <text class="driver-text">{{item.driverName}}</text>
+        <text class="driver-phone">{{item.driverPhoneDisplay}}</text>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && orders.length === 0}}">
+      <view class="empty-icon">📋</view>
+      <view class="empty-text">暂无订单</view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+  </view>
+
+  <!-- TabBar 占位 -->
+  <view class="tab-bar-placeholder"></view>
+</view>

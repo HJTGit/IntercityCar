@@ -1,0 +1,134 @@
+<!--pages/order-detail/order-detail.wxml-->
+<view class="container">
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="onBack">←</view>
+    <view class="nav-title">订单详情</view>
+    <view class="nav-more"></view>
+  </view>
+
+  <!-- 订单状态 -->
+  <view class="order-status-section card">
+    <view class="order-number">订单号：{{order.orderNo}}</view>
+    <view class="status-tag-large {{order.statusClass}}">{{order.statusText}}</view>
+  </view>
+
+  <!-- 地图区域 -->
+  <view class="map-section card">
+    <view class="map-placeholder">
+      <view class="map-icon">🗺️</view>
+      <view class="map-text">地图区域</view>
+      <view class="map-hint">● 起点：{{order.startLocation.name}}</view>
+      <view class="map-hint">◎ 终点：{{order.endLocation.name}}</view>
+    </view>
+  </view>
+
+  <!-- 行程信息 -->
+  <view class="info-section card">
+    <view class="section-title">行程信息</view>
+
+    <view class="info-row">
+      <view class="info-label">出发地</view>
+      <view class="info-value">{{order.startLocation.name}}</view>
+    </view>
+
+    <view class="info-divider"></view>
+
+    <view class="info-row">
+      <view class="info-label">目的地</view>
+      <view class="info-value">{{order.endLocation.name}}</view>
+    </view>
+
+    <view class="info-divider"></view>
+
+    <view class="info-row">
+      <view class="info-label">预约时间</view>
+      <view class="info-value">{{order.appointmentTimeDisplay}}</view>
+    </view>
+
+    <view class="info-divider"></view>
+
+    <view class="info-row">
+      <view class="info-label">乘车人数</view>
+      <view class="info-value">{{order.passengerCount}}人</view>
+    </view>
+
+    <view class="info-divider" wx:if="{{order.remark}}"></view>
+
+    <view class="info-row" wx:if="{{order.remark}}">
+      <view class="info-label">备注</view>
+      <view class="info-value">{{order.remark}}</view>
+    </view>
+  </view>
+
+  <!-- 乘客信息 -->
+  <view class="info-section card">
+    <view class="section-title">乘客信息</view>
+
+    <view class="info-row">
+      <view class="info-label">乘客</view>
+      <view class="info-value">{{order.passengerName}}</view>
+    </view>
+
+    <view class="info-divider"></view>
+
+    <view class="info-row">
+      <view class="info-label">电话</view>
+      <view class="info-value phone" bindtap="onCallPhone" data-phone="{{order.passengerPhone}}">
+        📞 {{order.passengerPhoneDisplay}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 司机信息（已接单时显示） -->
+  <view class="info-section card" wx:if="{{order.driverName}}">
+    <view class="section-title">司机信息</view>
+
+    <view class="info-row">
+      <view class="info-label">司机</view>
+      <view class="info-value">{{order.driverName}}</view>
+    </view>
+
+    <view class="info-divider"></view>
+
+    <view class="info-row">
+      <view class="info-label">电话</view>
+      <view class="info-value phone" bindtap="onCallPhone" data-phone="{{order.driverPhone}}">
+        📞 {{order.driverPhoneDisplay}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <!-- 待接单：乘客可以取消 -->
+    <button
+      wx:if="{{order.status === 'pending' && role === 'passenger'}}"
+      class="btn btn-danger"
+      bindtap="onCancelOrder"
+    >
+      取消订单
+    </button>
+
+    <!-- 已接单：乘客可以联系司机 -->
+    <button
+      wx:if="{{order.status === 'accepted' && role === 'passenger'}}"
+      class="btn btn-secondary"
+      bindtap="onContactDriver"
+    >
+      联系司机
+    </button>
+
+    <!-- 已接单：司机可以完成 -->
+    <button
+      wx:if="{{order.status === 'accepted' && role === 'driver'}}"
+      class="btn btn-primary"
+      bindtap="onCompleteOrder"
+    >
+      完成行程
+    </button>
+  </view>
+
+  <!-- TabBar 占位 -->
+  <view class="tab-bar-placeholder"></view>
+</view>

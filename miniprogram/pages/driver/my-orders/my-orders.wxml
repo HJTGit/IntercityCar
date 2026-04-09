@@ -1,0 +1,118 @@
+<!--pages/driver/my-orders/my-orders.wxml-->
+<view class="container">
+  <!-- 乘客模式 -->
+  <block wx:if="{{currentRole === 'passenger'}}">
+    <!-- 页面标题 -->
+    <view class="page-header">
+      <view class="page-title">我的</view>
+    </view>
+
+    <!-- 用户信息卡片 -->
+    <view class="card user-card">
+      <view class="user-info">
+        <view class="user-avatar">👤</view>
+        <view class="user-detail">
+          <view class="user-name">{{userInfo.name || '乘客'}}</view>
+          <view class="user-role">乘客身份</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 切换到司机 -->
+    <view class="card switch-card" bindtap="onSwitchToDriver">
+      <view class="switch-icon">🚕</view>
+      <view class="switch-content">
+        <view class="switch-title">切换为司机</view>
+        <view class="switch-desc">承接接送服务</view>
+      </view>
+      <view class="switch-arrow">→</view>
+    </view>
+  </block>
+
+  <!-- 司机模式 -->
+  <block wx:if="{{currentRole === 'driver'}}">
+    <!-- 页面标题 -->
+    <view class="page-header">
+      <view class="page-title">我的接单</view>
+    </view>
+
+    <!-- 切换回乘客 -->
+    <view class="card switch-card" bindtap="onSwitchToPassenger">
+      <view class="switch-icon">👤</view>
+      <view class="switch-content">
+        <view class="switch-title">切换为乘客</view>
+        <view class="switch-desc">使用乘车服务</view>
+      </view>
+      <view class="switch-arrow">→</view>
+    </view>
+
+    <!-- 状态筛选 -->
+    <view class="status-tabs">
+      <view
+        wx:for="{{statusFilters}}"
+        wx:key="value"
+        class="status-tab {{currentStatus === item.value ? 'active' : ''}}"
+        bindtap="onStatusChange"
+        data-status="{{item.value}}"
+      >
+        {{item.text}}
+      </view>
+    </view>
+
+    <!-- 订单列表 -->
+    <view class="order-list">
+      <view
+        wx:for="{{orders}}"
+        wx:key="id"
+        class="order-card card"
+        bindtap="onOrderTap"
+        data-id="{{item.id}}"
+      >
+        <view class="order-route">
+          <text class="route-icon">📍</text>
+          <text class="route-text">{{item.startLocation.name}} → {{item.endLocation.name}}</text>
+        </view>
+
+        <view class="order-info">
+          <view class="info-item">
+            <text class="info-icon">🕐</text>
+            <text class="info-text">{{item.appointmentTimeDisplay}}</text>
+          </view>
+          <view class="info-item">
+            <text class="info-icon">👤</text>
+            <text class="info-text">{{item.passengerName}}</text>
+            <text class="info-text">{{item.passengerPhoneDisplay}}</text>
+          </view>
+        </view>
+
+        <view class="order-footer">
+          <view class="status-tag {{item.statusClass}}">{{item.statusText}}</view>
+          <view class="order-meta">
+            <text class="arrow-icon">→</text>
+          </view>
+        </view>
+
+        <!-- 进行中的订单显示完成按钮 -->
+        <view class="order-actions" wx:if="{{item.status === 'accepted'}}">
+          <button class="btn btn-primary complete-btn" bindtap="onCompleteOrder" data-id="{{item.id}}">
+            完成行程
+          </button>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty" wx:if="{{!loading && orders.length === 0}}">
+        <view class="empty-icon">📝</view>
+        <view class="empty-text">暂无订单</view>
+      </view>
+
+      <!-- 加载中 -->
+      <view class="loading" wx:if="{{loading}}">
+        <text>加载中...</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- TabBar 占位 -->
+  <view class="tab-bar-placeholder"></view>
+</view>

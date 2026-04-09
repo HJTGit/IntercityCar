@@ -1,0 +1,115 @@
+/* components/order-card/order-card.wxss */
+
+.order-card {
+  background: var(--background-white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-card);
+  margin-bottom: var(--spacing-md);
+}
+
+.order-route {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.route-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.route-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.order-info {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+}
+
+.info-icon {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.info-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.order-remark {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.remark-icon {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.remark-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.order-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-tag.tag-pending {
+  background: var(--tag-pending-bg);
+  color: var(--warning);
+}
+
+.status-tag.tag-accepted {
+  background: var(--tag-accepted-bg);
+  color: var(--primary);
+}
+
+.status-tag.tag-completed {
+  background: var(--tag-completed-bg);
+  color: var(--success);
+}
+
+.status-tag.tag-cancelled {
+  background: var(--tag-cancelled-bg);
+  color: var(--text-placeholder);
+}
+
+.order-meta {
+  display: flex;
+  align-items: center;
+}
+
+.meta-text {
+  font-size: 12px;
+  color: var(--text-placeholder);
+}
+
+.arrow-icon {
+  font-size: 14px;
+  color: var(--text-placeholder);
+  margin-left: 8px;
+}

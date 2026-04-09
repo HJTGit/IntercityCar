@@ -1,0 +1,94 @@
+<!--pages/passenger/create-order/create-order.wxml-->
+<view class="container">
+  <!-- 导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-back" bindtap="onBack">←</view>
+    <view class="nav-title">填写预约信息</view>
+    <view class="nav-more"></view>
+  </view>
+
+  <!-- 行程信息卡片 -->
+  <view class="card route-card">
+    <view class="route-header">行程信息</view>
+
+    <!-- 出发地 -->
+    <view class="location-item start" bindtap="onSelectLocation" data-type="start">
+      <view class="location-dot start-dot">●</view>
+      <view class="location-content">
+        <view class="location-label">出发地</view>
+        <view class="location-value {{startLocation.name ? '' : 'placeholder'}}">
+          {{startLocation.name || '正在获取位置...'}}
+        </view>
+      </view>
+      <view class="location-arrow">›</view>
+    </view>
+
+    <view class="route-line"></view>
+
+    <!-- 目的地 -->
+    <view class="location-item end" bindtap="onSelectLocation" data-type="end">
+      <view class="location-dot end-dot">◎</view>
+      <view class="location-content">
+        <view class="location-label">目的地</view>
+        <view class="location-value {{endLocation.name ? '' : 'placeholder'}}">
+          {{endLocation.name || '点击选择目的地'}}
+        </view>
+      </view>
+      <view class="location-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 预约时间 -->
+  <view class="card">
+    <view class="form-item" style="flex-wrap: wrap;">
+      <view class="form-label">预约时间</view>
+    </view>
+    <view class="time-picker-row">
+      <picker mode="date" bindchange="onDateChange" value="{{dateValue}}">
+        <view class="time-picker-btn">
+          {{dateText || '选择日期'}}
+        </view>
+      </picker>
+      <picker mode="time" bindchange="onTimeChange" value="{{timeValue}}">
+        <view class="time-picker-btn">
+          {{timeText || '选择时间'}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 乘车人数 -->
+  <view class="card">
+    <view class="form-item">
+      <view class="form-label">乘车人数</view>
+      <view class="counter">
+        <view class="counter-btn {{passengerCount <= 1 ? 'disabled' : ''}}" bindtap="onDecrement">-</view>
+        <view class="counter-value">{{passengerCount}}</view>
+        <view class="counter-btn {{passengerCount >= 4 ? 'disabled' : ''}}" bindtap="onIncrement">+</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="card">
+    <view class="form-item">
+      <view class="form-label">备注（选填）</view>
+      <input
+        class="input"
+        type="text"
+        placeholder="如：大件行李、老人小孩等"
+        placeholder-class="input-placeholder"
+        bindinput="onRemarkInput"
+        value="{{remark}}"
+      />
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="btn btn-primary submit-btn" bindtap="onSubmit">提交订单</button>
+  </view>
+
+  <!-- TabBar 占位 -->
+  <view class="tab-bar-placeholder"></view>
+</view>

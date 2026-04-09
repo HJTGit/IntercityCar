@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上门车接车送 - API 测试</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 16px; color: #1890ff; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 14px; color: #666; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        textarea { height: 100px; resize: vertical; font-family: monospace; }
+        button { background: #1890ff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        button:hover { background: #096dd9; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: #fff; color: #1890ff; border: 1px solid #1890ff; }
+        .btn-secondary:hover { background: #e6f7ff; }
+        .btn-danger { background: #ff4d4f; }
+        .btn-danger:hover { background: #cf1322; }
+        .btn-success { background: #52c41a; }
+        .btn-success:hover { background: #389e0d; }
+        .result { margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 4px; font-family: monospace; font-size: 13px; word-break: break-all; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+        .success { color: #52c41a; }
+        .error { color: #ff4d4f; }
+        .nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .nav button { flex: 1; min-width: 100px; }
+        .nav button.active { background: #1890ff; color: #fff; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .status { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 12px; }
+        .status.pending { background: #fff7e6; color: #fa8c16; }
+        .status.accepted { background: #e6f7ff; color: #1890ff; }
+        .status.completed { background: #f6ffed; color: #52c41a; }
+        .status.cancelled { background: #f5f5f5; color: #999; }
+        .status.passenger { background: #e6f7ff; color: #1890ff; }
+        .status.driver { background: #fff7e6; color: #fa8c16; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #eee; }
+        th { color: #666; font-weight: 500; }
+        .order-item { padding: 15px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; }
+        .order-route { font-weight: 500; color: #333; margin-bottom: 8px; }
+        .order-time { color: #666; font-size: 13px; margin-bottom: 5px; }
+        .order-actions { margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .loading { text-align: center; color: #999; padding: 20px; }
+        .user-item { padding: 15px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; }
+        .user-info { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .user-info div { margin-bottom: 5px; }
+        .two-col { display: flex; gap: 15px; }
+        .two-col .card { flex: 1; }
+        .inline-form { display: flex; gap: 10px; align-items: flex-end; }
+        .inline-form .form-group { flex: 1; margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>上门车接车送 - API 测试</h1>
+
+        <div class="card">
+            <h2>🔧 健康检查</h2>
+            <button onclick="healthCheck()">检查服务状态</button>
+            <div id="healthResult" class="result" style="display:none;"></div>
+        </div>
+
+        <div class="nav">
+            <button class="active" onclick="showSection('user')">用户管理</button>
+            <button onclick="showSection('create')">创建订单</button>
+            <button onclick="showSection('list')">订单列表</button>
+            <button onclick="showSection('detail')">订单详情</button>
+        </div>
+
+        <!-- 用户管理 -->
+        <div id="section-user" class="section active">
+            <div class="two-col">
+                <div class="card">
+                    <h2>👤 用户注册/更新</h2>
+                    <div class="form-group">
+                        <label>OpenID</label>
+                        <input type="text" id="userOpenid" value="test_user_123" placeholder="输入OpenID">
+                    </div>
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="userNickname" value="张三" placeholder="输入昵称">
+                    </div>
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" id="userName" value="张三" placeholder="输入姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>电话</label>
+                        <input type="text" id="userPhone" value="13800138000" placeholder="输入电话">
+                    </div>
+                    <div class="form-group">
+                        <label>角色</label>
+                        <select id="userRole">
+                            <option value="passenger">乘客</option>
+                            <option value="driver">司机</option>
+                        </select>
+                    </div>
+                    <button onclick="registerUser()">注册/更新用户</button>
+                    <button class="btn-secondary" onclick="getUserInfo()">查询用户</button>
+                    <div id="userResult" class="result" style="display:none;margin-top:15px;"></div>
+                </div>
+
+                <div class="card">
+                    <h2>📋 用户列表</h2>
+                    <button onclick="getAllUsers()" style="margin-bottom:15px;">刷新列表</button>
+                    <div id="usersList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 创建订单 -->
+        <div id="section-create" class="section">
+            <div class="card">
+                <h2>📝 创建订单</h2>
+                <form id="createForm">
+                    <div class="form-group">
+                        <label>OpenID (测试用)</label>
+                        <input type="text" id="openid" value="test_user_123" placeholder="输入OpenID">
+                    </div>
+                    <div class="form-group">
+                        <label>乘客姓名</label>
+                        <input type="text" id="passengerName" value="张三" placeholder="输入乘客姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>乘客电话</label>
+                        <input type="text" id="passengerPhone" value="13800138000" placeholder="输入乘客电话">
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>出发地名称</label>
+                            <input type="text" id="startName" value="北京站" placeholder="出发地">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>目的地名称</label>
+                            <input type="text" id="endName" value="上海虹桥站" placeholder="目的地">
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>出发地纬度</label>
+                            <input type="number" step="0.000001" id="startLat" value="39.904">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>出发地经度</label>
+                            <input type="number" step="0.000001" id="startLng" value="116.408">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>目的地纬度</label>
+                            <input type="number" step="0.000001" id="endLat" value="31.194">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>目的地经度</label>
+                            <input type="number" step="0.000001" id="endLng" value="121.320">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>预约时间</label>
+                        <input type="datetime-local" id="appointmentTime" value="2026-04-10T14:00">
+                    </div>
+                    <div class="form-group">
+                        <label>乘车人数</label>
+                        <input type="number" id="passengerCount" value="1" min="1" max="4">
+                    </div>
+                    <div class="form-group">
+                        <label>备注</label>
+                        <input type="text" id="remark" value="有大件行李" placeholder="备注信息">
+                    </div>
+                    <button type="button" onclick="createOrder()">提交订单</button>
+                </form>
+                <div id="createResult" class="result" style="display:none;"></div>
+            </div>
+        </div>
+
+        <!-- 订单列表 -->
+        <div id="section-list" class="section">
+            <div class="card">
+                <h2>📋 订单列表</h2>
+                <div class="inline-form" style="margin-bottom:15px;">
+                    <div class="form-group">
+                        <label>OpenID</label>
+                        <input type="text" id="listOpenid" value="test_user_123" placeholder="OpenID">
+                    </div>
+                    <div class="form-group">
+                        <label>角色</label>
+                        <select id="listRole" style="width:100px;">
+                            <option value="passenger">乘客</option>
+                            <option value="driver">司机</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>状态</label>
+                        <select id="listStatus" style="width:120px;">
+                            <option value="">全部</option>
+                            <option value="pending">待接单</option>
+                            <option value="accepted">已接单</option>
+                            <option value="completed">已完成</option>
+                            <option value="cancelled">已取消</option>
+                        </select>
+                    </div>
+                    <button onclick="getOrders()">查询</button>
+                </div>
+                <div id="ordersList"></div>
+            </div>
+        </div>
+
+        <!-- 订单详情 -->
+        <div id="section-detail" class="section">
+            <div class="card">
+                <h2>🔍 订单详情</h2>
+                <div class="inline-form" style="margin-bottom:15px;">
+                    <div class="form-group">
+                        <label>订单ID</label>
+                        <input type="number" id="detailId" placeholder="订单ID">
+                    </div>
+                    <div class="form-group">
+                        <label>OpenID</label>
+                        <input type="text" id="detailOpenid" value="test_user_123" placeholder="OpenID">
+                    </div>
+                    <button onclick="getOrderDetail()">查询</button>
+                </div>
+                <div id="orderDetail"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        function showSection(name) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById('section-' + name).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function healthCheck() {
+            fetch(API_BASE + '/health')
+                .then(r => r.json())
+                .then(data => {
+                    const el = document.getElementById('healthResult');
+                    el.style.display = 'block';
+                    el.innerHTML = `<span class="success">✅ 服务正常</span>\n${JSON.stringify(data, null, 2)}`;
+                })
+                .catch(err => {
+                    document.getElementById('healthResult').innerHTML = `<span class="error">❌ 连接失败</span>\n${err.message}`;
+                });
+        }
+
+        // ============ 用户相关 ============
+
+        function registerUser() {
+            const openid = document.getElementById('userOpenid').value;
+            const data = {
+                nickname: document.getElementById('userNickname').value,
+                name: document.getElementById('userName').value,
+                phone: document.getElementById('userPhone').value,
+                role: document.getElementById('userRole').value
+            };
+
+            fetch(API_BASE + '/user/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('userResult');
+                el.style.display = 'block';
+                if (data.code === 1000) {
+                    el.innerHTML = `<span class="success">✅ 用户注册/更新成功</span>\n${JSON.stringify(data.data, null, 2)}`;
+                } else {
+                    el.innerHTML = `<span class="error">❌ 失败</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            })
+            .catch(err => {
+                document.getElementById('userResult').innerHTML = `<span class="error">❌ 请求失败</span>\n${err.message}`;
+            });
+        }
+
+        function getUserInfo() {
+            const openid = document.getElementById('userOpenid').value;
+            if (!openid) return alert('请输入OpenID');
+
+            fetch(API_BASE + '/user/info', {
+                headers: { 'X-OpenID': openid }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('userResult');
+                el.style.display = 'block';
+                if (data.code === 1000) {
+                    el.innerHTML = `<span class="success">✅ 用户信息</span>\n${JSON.stringify(data.data, null, 2)}`;
+                } else {
+                    el.innerHTML = `<span class="error">❌ ${data.message || '用户不存在'}</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            })
+            .catch(err => {
+                document.getElementById('userResult').innerHTML = `<span class="error">❌ 请求失败</span>\n${err.message}`;
+            });
+        }
+
+        function updateUserRole() {
+            const openid = document.getElementById('userOpenid').value;
+            const role = document.getElementById('userRole').value;
+
+            fetch(API_BASE + '/user/role', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid },
+                body: JSON.stringify({ role })
+            })
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('userResult');
+                el.style.display = 'block';
+                if (data.code === 1000) {
+                    el.innerHTML = `<span class="success">✅ 角色更新成功</span>\n${JSON.stringify(data.data, null, 2)}`;
+                } else {
+                    el.innerHTML = `<span class="error">❌ 失败</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            })
+            .catch(err => {
+                document.getElementById('userResult').innerHTML = `<span class="error">❌ 请求失败</span>\n${err.message}`;
+            });
+        }
+
+        async function getAllUsers() {
+            const el = document.getElementById('usersList');
+            el.innerHTML = '<div class="loading">加载中...</div>';
+
+            fetch(API_BASE + '/user/list', { headers: { 'X-OpenID': 'admin' } })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.code === 1000 && data.data && data.data.length > 0) {
+                        el.innerHTML = data.data.map(u => `
+                            <div class="user-item">
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <strong>${u.name || u.nickname || '未命名'}</strong>
+                                    <span class="status ${u.role}">${u.role === 'passenger' ? '乘客' : '司机'}</span>
+                                </div>
+                                <div class="user-info">
+                                    <div><strong>OpenID:</strong> ${u.openid}</div>
+                                    <div><strong>电话:</strong> ${u.phone || '未设置'}</div>
+                                    <div><strong>注册时间:</strong> ${u.createTime || '未知'}</div>
+                                </div>
+                                <div class="order-actions" style="margin-top:10px;">
+                                    <button class="btn-secondary" onclick="loadUserToForm('${u.openid}', '${u.nickname || ''}', '${u.name || ''}', '${u.phone || ''}', '${u.role}')">编辑</button>
+                                    <button class="btn-success" onclick="switchToDriver('${u.openid}')">设为司机</button>
+                                    <button onclick="switchToPassenger('${u.openid}')">设为乘客</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        el.innerHTML = '<div class="loading">暂无用户数据</div>';
+                    }
+                })
+                .catch(err => {
+                    el.innerHTML = '<div class="loading">加载失败</div>';
+                });
+        }
+
+        function loadUserToForm(openid, nickname, name, phone, role) {
+            document.getElementById('userOpenid').value = openid;
+            document.getElementById('userNickname').value = nickname;
+            document.getElementById('userName').value = name;
+            document.getElementById('userPhone').value = phone;
+            document.getElementById('userRole').value = role;
+        }
+
+        async function switchToDriver(openid) {
+            await fetch(API_BASE + '/user/role', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid },
+                body: JSON.stringify({ role: 'driver' })
+            });
+            getAllUsers();
+        }
+
+        async function switchToPassenger(openid) {
+            await fetch(API_BASE + '/user/role', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid },
+                body: JSON.stringify({ role: 'passenger' })
+            });
+            getAllUsers();
+        }
+
+        // ============ 订单相关 ============
+
+        function createOrder() {
+            const openid = document.getElementById('openid').value;
+            const appointmentTime = document.getElementById('appointmentTime').value.replace('T', ' ') + ':00';
+
+            const data = {
+                passengerName: document.getElementById('passengerName').value,
+                passengerPhone: document.getElementById('passengerPhone').value,
+                startLocation: {
+                    name: document.getElementById('startName').value,
+                    latitude: parseFloat(document.getElementById('startLat').value),
+                    longitude: parseFloat(document.getElementById('startLng').value)
+                },
+                endLocation: {
+                    name: document.getElementById('endName').value,
+                    latitude: parseFloat(document.getElementById('endLat').value),
+                    longitude: parseFloat(document.getElementById('endLng').value)
+                },
+                appointmentTime: appointmentTime,
+                passengerCount: parseInt(document.getElementById('passengerCount').value),
+                remark: document.getElementById('remark').value
+            };
+
+            fetch(API_BASE + '/order/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid },
+                body: JSON.stringify(data)
+            })
+            .then(r => r.json())
+            .then(data => {
+                const el = document.getElementById('createResult');
+                el.style.display = 'block';
+                if (data.code === 1000) {
+                    el.innerHTML = `<span class="success">✅ 订单创建成功！</span>\n订单ID: ${data.data.orderId}\n订单号: ${data.data.orderNo}`;
+                    document.getElementById('detailId').value = data.data.orderId;
+                } else {
+                    el.innerHTML = `<span class="error">❌ 创建失败</span>\n${JSON.stringify(data, null, 2)}`;
+                }
+            })
+            .catch(err => {
+                document.getElementById('createResult').innerHTML = `<span class="error">❌ 请求失败</span>\n${err.message}`;
+            });
+        }
+
+        function getOrders() {
+            const openid = document.getElementById('listOpenid').value;
+            const role = document.getElementById('listRole').value;
+            const status = document.getElementById('listStatus').value;
+            let url = API_BASE + '/orders?role=' + role;
+            if (status) url += '&status=' + status;
+
+            fetch(url, { headers: { 'X-OpenID': openid } })
+                .then(r => r.json())
+                .then(data => {
+                    const el = document.getElementById('ordersList');
+                    if (data.code === 1000 && data.data.list.length > 0) {
+                        el.innerHTML = data.data.list.map(o => `
+                            <div class="order-item">
+                                <div class="order-route">📍 ${o.startLocation.name} → ${o.endLocation.name}</div>
+                                <div class="order-time">🕐 ${o.appointmentTime} | 👤 ${o.passengerCount}人</div>
+                                <div class="order-time">📝 ${o.remark || '无'}</div>
+                                <div style="margin-top:8px;">
+                                    <span class="status ${o.status}">${o.status === 'pending' ? '待接单' : o.status === 'accepted' ? '已接单' : o.status === 'completed' ? '已完成' : '已取消'}</span>
+                                    <span style="margin-left:10px;color:#666;">ID: ${o.id} | ${o.orderNo}</span>
+                                </div>
+                                <div class="order-actions">
+                                    <button class="btn-secondary" onclick="viewDetail(${o.id}, '${openid}')">查看详情</button>
+                                    ${o.status === 'pending' ? `<button class="btn-danger" onclick="cancelOrder(${o.id}, '${openid}')">取消订单</button>` : ''}
+                                    ${o.status === 'accepted' && role === 'driver' ? `<button class="btn-success" onclick="completeOrder(${o.id}, '${openid}')">完成行程</button>` : ''}
+                                    ${o.status === 'pending' && role === 'driver' ? `<button onclick="acceptOrder(${o.id}, '${openid}')">接单</button>` : ''}
+                                </div>
+                            </div>
+                        `).join('');
+                    } else {
+                        el.innerHTML = '<div class="loading">暂无订单</div>';
+                    }
+                });
+        }
+
+        function getOrderDetail() {
+            const id = document.getElementById('detailId').value;
+            const openid = document.getElementById('detailOpenid').value;
+            if (!id) return alert('请输入订单ID');
+
+            fetch(API_BASE + '/order/' + id, { headers: { 'X-OpenID': openid } })
+                .then(r => r.json())
+                .then(data => {
+                    const el = document.getElementById('orderDetail');
+                    if (data.code === 1000) {
+                        const o = data.data;
+                        el.innerHTML = `
+                            <div class="order-item">
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                    <span style="font-weight:bold;">${o.orderNo}</span>
+                                    <span class="status ${o.status}">${o.status === 'pending' ? '待接单' : o.status === 'accepted' ? '已接单' : o.status === 'completed' ? '已完成' : '已取消'}</span>
+                                </div>
+                                <hr style="margin:15px 0;border:none;border-top:1px solid #eee;">
+                                <div><strong>出发地：</strong>${o.startLocation.name}</div>
+                                <div><strong>目的地：</strong>${o.endLocation.name}</div>
+                                <div><strong>预约时间：</strong>${o.appointmentTime}</div>
+                                <div><strong>乘车人数：</strong>${o.passengerCount}人</div>
+                                <div><strong>备注：</strong>${o.remark || '无'}</div>
+                                <hr style="margin:15px 0;border:none;border-top:1px solid #eee;">
+                                <div><strong>乘客：</strong>${o.passengerName} (${o.passengerPhone})</div>
+                                ${o.driverName ? `<div><strong>司机：</strong>${o.driverName} (${o.driverPhone})</div>` : ''}
+                                <div class="order-actions" style="margin-top:15px;">
+                                    ${o.status === 'pending' ? `<button class="btn-danger" onclick="cancelOrder(${o.id}, '${openid}')">取消订单</button>` : ''}
+                                    ${o.status === 'accepted' ? `<button class="btn-success" onclick="completeOrder(${o.id}, '${openid}')">完成行程</button>` : ''}
+                                    ${o.status === 'pending' ? `<button onclick="acceptOrder(${o.id}, '${openid}')">接单</button>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        el.innerHTML = `<span class="error">❌ ${data.message}</span>`;
+                    }
+                });
+        }
+
+        function viewDetail(id, openid) {
+            document.getElementById('detailId').value = id;
+            document.getElementById('detailOpenid').value = openid;
+            showSection('detail');
+            // 激活详情按钮
+            document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.nav button')[3].classList.add('active');
+            getOrderDetail();
+        }
+
+        let role = 'passenger';
+        document.getElementById('listRole').addEventListener('change', e => role = e.target.value);
+
+        function acceptOrder(id, openid) {
+            fetch(API_BASE + '/order/' + id + '/accept', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid, 'X-Role': 'driver' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                alert(data.code === 1000 ? '✅ 接单成功' : '❌ ' + data.message);
+                getOrders();
+            });
+        }
+
+        function completeOrder(id, openid) {
+            fetch(API_BASE + '/order/' + id + '/complete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid }
+            })
+            .then(r => r.json())
+            .then(data => {
+                alert(data.code === 1000 ? '✅ 订单已完成' : '❌ ' + data.message);
+                getOrders();
+            });
+        }
+
+        function cancelOrder(id, openid) {
+            if (!confirm('确定取消该订单吗？')) return;
+            fetch(API_BASE + '/order/' + id + '/cancel', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-OpenID': openid }
+            })
+            .then(r => r.json())
+            .then(data => {
+                alert(data.code === 1000 ? '✅ 订单已取消' : '❌ ' + data.message);
+                getOrders();
+            });
+        }
+
+        // 页面加载时自动检查健康状态
+        healthCheck();
+    </script>
+</body>
+</html>

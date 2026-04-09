@@ -1,0 +1,84 @@
+<!--pages/driver/order-hall/order-hall.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="page-title">订单大厅</view>
+  </view>
+
+  <!-- 筛选区域 -->
+  <view class="filter-section">
+    <view class="filter-item">
+      <picker mode="selector" bindchange="onStartFilterChange" value="{{startFilterIndex}}" range="{{startFilterOptions}}">
+        <view class="filter-picker">
+          <text>{{startFilterText || '出发地'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    <view class="filter-item">
+      <picker mode="selector" bindchange="onEndFilterChange" value="{{endFilterIndex}}" range="{{endFilterOptions}}">
+        <view class="filter-picker">
+          <text>{{endFilterText || '目的地'}}</text>
+          <text class="arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 非司机提示 -->
+  <view class="card tip-card" wx:if="{{currentRole !== 'driver'}}">
+    <view class="tip-text">您当前是乘客身份，如需接单请先</view>
+    <view class="tip-link" bindtap="onSwitchToDriver">切换为司机</view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list">
+    <view
+      wx:for="{{orders}}"
+      wx:key="id"
+      class="order-card card"
+    >
+      <view class="order-route">
+        <text class="route-icon">📍</text>
+        <text class="route-text">{{item.startLocation.name}} → {{item.endLocation.name}}</text>
+      </view>
+
+      <view class="order-info">
+        <view class="info-item">
+          <text class="info-icon">🕐</text>
+          <text class="info-text">{{item.appointmentTimeDisplay}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-icon">👤</text>
+          <text class="info-text">{{item.passengerCount}}人</text>
+        </view>
+      </view>
+
+      <view class="order-remark" wx:if="{{item.remark}}">
+        <text class="remark-icon">📝</text>
+        <text class="remark-text">{{item.remark}}</text>
+      </view>
+
+      <!-- 司机才显示接单按钮 -->
+      <view class="order-actions" wx:if="{{currentRole === 'driver'}}">
+        <button class="btn btn-primary accept-btn" bindtap="onAcceptOrder" data-id="{{item.id}}">
+          立即接单
+        </button>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{!loading && orders.length === 0}}">
+      <view class="empty-icon">🏢</view>
+      <view class="empty-text">暂无可接订单</view>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+  </view>
+
+  <!-- TabBar 占位 -->
+  <view class="tab-bar-placeholder"></view>
+</view>

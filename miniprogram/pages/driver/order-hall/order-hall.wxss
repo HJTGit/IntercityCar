@@ -1,0 +1,162 @@
+/* pages/driver/order-hall/order-hall.wxss */
+
+.container {
+  min-height: 100vh;
+  background: var(--background);
+  padding: 0 var(--spacing-lg);
+}
+
+/* 页面标题 */
+.page-header {
+  padding: var(--spacing-lg) 0;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* 筛选区域 */
+.filter-section {
+  display: flex;
+  gap: var(--spacing-md);
+  padding-bottom: var(--spacing-lg);
+}
+
+.filter-item {
+  flex: 1;
+}
+
+.filter-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--background-white);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.arrow {
+  font-size: 10px;
+  color: var(--text-placeholder);
+}
+
+/* 提示卡片 */
+.tip-card {
+  display: flex;
+  align-items: center;
+  background: var(--tag-pending-bg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.tip-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  flex: 1;
+}
+
+.tip-link {
+  font-size: 14px;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* 订单卡片 */
+.order-card {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+}
+
+.order-route {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.route-icon {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.route-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.order-info {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin-bottom: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+}
+
+.info-icon {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.info-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.order-remark {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.remark-icon {
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.remark-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.order-actions {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.accept-btn {
+  width: 100%;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-text {
+  font-size: 14px;
+  color: var(--text-placeholder);
+}
+
+/* 加载中 */
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-placeholder);
+}
+
+/* TabBar 占位 */
+.tab-bar-placeholder {
+  height: 56px;
+}

@@ -1,0 +1,32 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- Logo 区域 -->
+  <view class="logo-section">
+    <view class="logo-icon">🚗</view>
+    <view class="logo-text">上门车接车送</view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="action-section">
+    <view class="action-card card" bindtap="onGoCreateOrder">
+      <view class="action-icon">🚗</view>
+      <view class="action-content">
+        <view class="action-title">立即叫车</view>
+        <view class="action-desc">预约上门接送</view>
+      </view>
+      <view class="action-arrow">→</view>
+    </view>
+
+    <view class="action-card card" bindtap="onGoOrderList">
+      <view class="action-icon">📋</view>
+      <view class="action-content">
+        <view class="action-title">我的订单</view>
+        <view class="action-desc">查看历史订单</view>
+      </view>
+      <view class="action-arrow">→</view>
+    </view>
+  </view>
+
+  <!-- 底部 TabBar 占位 -->
+  <view class="tab-bar-placeholder"></view>
+</view>

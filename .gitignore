@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# WeChat Mini Program
+miniprogram/node_modules/
+miniprogram/.temp/
+
+# Environment
+.env
+*.log
+run.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
