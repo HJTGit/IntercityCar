@@ -39,17 +39,6 @@ Page({
       passengerPhone: userInfo.phone || ''
     });
 
-    // 设置默认日期（今天）
-    const today = new Date();
-    const defaultDate = this.formatDate(today);
-    this.setData({ dateValue: defaultDate, dateText: defaultDate });
-
-    // 设置默认时间（当前时间+1小时，向上取整到整点）
-    today.setHours(today.getHours() + 1);
-    today.setMinutes(0);
-    const defaultTime = this.formatTime(today);
-    this.setData({ timeValue: defaultTime, timeText: defaultTime });
-
     // 获取当前位置
     this.getCurrentLocation();
   },

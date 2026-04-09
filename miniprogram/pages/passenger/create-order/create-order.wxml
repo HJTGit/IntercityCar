@@ -43,11 +43,11 @@
     <view class="form-item">
       <view class="form-label">预约时间</view>
     </view>
-    <view class="datetime-picker">
+    <view class="datetime-picker {{dateText && timeText ? 'selected' : ''}}">
       <picker mode="date" bindchange="onDateChange" value="{{dateValue}}" fields="day">
         <view class="datetime-item">
           <view class="datetime-icon">📅</view>
-          <view class="datetime-value">{{dateText || '选择日期'}}</view>
+          <view class="datetime-value {{dateText ? '' : 'placeholder'}}">{{dateText || '选择日期'}}</view>
           <view class="datetime-arrow">›</view>
         </view>
       </picker>
@@ -55,7 +55,7 @@
       <picker mode="time" bindchange="onTimeChange" value="{{timeValue}}">
         <view class="datetime-item time-item">
           <view class="datetime-icon">🕐</view>
-          <view class="datetime-value">{{timeText || '选择时间'}}</view>
+          <view class="datetime-value {{timeText ? '' : 'placeholder'}}">{{timeText || '选择时间'}}</view>
         </view>
       </picker>
     </view>

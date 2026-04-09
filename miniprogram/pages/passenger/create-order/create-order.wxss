@@ -125,6 +125,13 @@
   border-radius: var(--radius-lg);
   padding: 4px;
   margin-top: 8px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.datetime-picker.selected {
+  background: var(--primary-light, #E6F7FF);
+  border-color: var(--primary);
 }
 
 .datetime-item {
@@ -145,6 +152,12 @@
   font-size: 15px;
   color: var(--text-primary);
   text-align: center;
+  font-weight: 500;
+}
+
+.datetime-value.placeholder {
+  color: var(--text-placeholder);
+  font-weight: normal;
 }
 
 .datetime-arrow {
