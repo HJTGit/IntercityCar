@@ -29,10 +29,14 @@ Page({
   },
 
   onLoad() {
+    // 获取用户信息
+    const app = getApp();
+    const userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo') || {};
+
     // 设置用户信息
     this.setData({
-      passengerName: '乘客',
-      passengerPhone: '13800138000'
+      passengerName: userInfo.nickname || userInfo.name || '乘客',
+      passengerPhone: userInfo.phone || ''
     });
 
     // 设置默认日期（今天）
