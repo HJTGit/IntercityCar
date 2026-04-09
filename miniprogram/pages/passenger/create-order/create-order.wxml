@@ -40,18 +40,23 @@
 
   <!-- 预约时间 -->
   <view class="card">
-    <view class="form-item" style="flex-wrap: wrap;">
+    <view class="form-item">
       <view class="form-label">预约时间</view>
     </view>
-    <view class="time-picker-row">
-      <picker mode="date" bindchange="onDateChange" value="{{dateValue}}">
-        <view class="time-picker-btn">
-          {{dateText || '选择日期'}}
+    <view class="datetime-picker">
+      <picker mode="date" bindchange="onDateChange" value="{{dateValue}}" fields="day">
+        <view class="datetime-item">
+          <view class="datetime-icon">📅</view>
+          <view class="datetime-value">{{dateText || '选择日期'}}</view>
+          <view class="datetime-arrow">›</view>
         </view>
       </picker>
+      <view class="datetime-divider"></view>
       <picker mode="time" bindchange="onTimeChange" value="{{timeValue}}">
-        <view class="time-picker-btn">
-          {{timeText || '选择时间'}}
+        <view class="datetime-item">
+          <view class="datetime-icon">🕐</view>
+          <view class="datetime-value">{{timeText || '选择时间'}}</view>
+          <view class="datetime-arrow">›</view>
         </view>
       </picker>
     </view>

@@ -117,22 +117,44 @@
   flex-shrink: 0;
 }
 
-/* 时间选择器行 */
-.time-picker-row {
+/* 日期时间选择器 */
+.datetime-picker {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  background: var(--background);
+  border-radius: var(--radius-lg);
+  padding: 4px;
   margin-top: 8px;
 }
 
-.time-picker-btn {
+.datetime-item {
   flex: 1;
-  height: 44px;
-  line-height: 44px;
-  text-align: center;
-  background: var(--background);
-  border-radius: var(--radius-md);
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  padding: 12px 8px;
+}
+
+.datetime-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.datetime-value {
+  flex: 1;
+  font-size: 15px;
   color: var(--text-primary);
+}
+
+.datetime-arrow {
+  font-size: 16px;
+  color: var(--text-placeholder);
+}
+
+.datetime-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+  margin: 0 8px;
 }
 
 /* 计数器 */
